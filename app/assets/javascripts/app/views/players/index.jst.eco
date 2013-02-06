@@ -1,0 +1,12 @@
+<h1>Listing Players</h1>
+
+<% for player in @players: %>
+  <div class="item" data-id="<%= player.id %>">
+    <a data-type="show"><%= player.first_name %></a>
+    
+    <a data-type="edit">Edit</a> 
+    <a data-type="destroy">Destroy</a>
+  </div>
+<% end %>
+
+<p><a data-type="new">New Player</a></p>

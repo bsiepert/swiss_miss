@@ -1,0 +1,6 @@
+<h1>Show Player</h1>
+
+<a data-type="edit">Edit</a> <a data-type="back">Back</a>
+
+<p>First Name: <%= @first_name %></p>
+<p>Last Name: <%= @last_name %></p>

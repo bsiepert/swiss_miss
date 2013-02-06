@@ -4,10 +4,13 @@
   <title>SwissMiss</title>
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "jQuery" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-<%= image_tag 'swiss_miss' %>
+<center>
+<%= image_tag 'swiss_miss.png' ,:width => 400%>
+</center>
 <%= yield %>
 
 </body>
