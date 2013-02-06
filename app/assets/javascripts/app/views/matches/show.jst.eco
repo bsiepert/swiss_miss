@@ -1,0 +1,9 @@
+<h1>Show Match</h1>
+
+<a data-type="edit">Edit</a> <a data-type="back">Back</a>
+
+<p>Player 1: <%= @player_1_id %></p>
+<p>Player 2: <%= @player_2_id %></p>
+<p>P1 Games Won: <%= @p1_games_won %></p>
+<p>P2 Games Won: <%= @p2_games_won %></p>
+<p>Draws: <%= @draws %></p>

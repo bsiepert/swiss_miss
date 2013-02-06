@@ -1,0 +1,54 @@
+<h1>Edit Match</h1>
+
+<a data-type="back">Back</a>
+
+<form>
+  
+  <label>
+    <span>Player 1</span>
+    <input 
+      type="text" name="player_1_id" 
+      value="<%= @player_1_id %>" required
+ autofocus>
+    <br />
+  </label>
+  
+  <label>
+    <span>Player 2</span>
+    <input 
+      type="text" name="player_2_id" 
+      value="<%= @player_2_id %>" required
+>
+    <br />
+  </label>
+  
+  <label>
+    <span>P1 Games Won</span>
+    <input 
+      type="text" name="p1_games_won" 
+      value="<%= @p1_games_won %>" required
+>
+    <br />
+  </label>
+  
+  <label>
+    <span>P2 Games Won</span>
+    <input 
+      type="text" name="p2_games_won" 
+      value="<%= @p2_games_won %>" required
+>
+    <br />
+  </label>
+  
+  <label>
+    <span>Draws</span>
+    <input 
+      type="text" name="draws" 
+      value="<%= @draws %>" required
+>
+    <br />
+  </label>
+  
+  <button>Edit</button>
+
+</form>
