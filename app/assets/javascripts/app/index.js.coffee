@@ -16,7 +16,7 @@ class App extends Spine.Controller
     super
     
     # Instantiate & append the Playesr controller
-    @append(@players = new App.Playesr)
+    @append(@players = new App.Players)
     
     Spine.Route.setup()    
 
