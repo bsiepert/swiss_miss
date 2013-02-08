@@ -6,4 +6,3 @@
 //
 //= require jquery
 //= require app
-//= require_tree .

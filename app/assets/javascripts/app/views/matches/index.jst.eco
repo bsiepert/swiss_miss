@@ -2,7 +2,7 @@
 
 <% for match in @matches: %>
   <div class="item" data-id="<%= match.id %>">
-    <a data-type="show"><%= match.player_1_id %></a>
+    <a data-type="show"><%= match.to_s()%></a>
     
     <a data-type="edit">Edit</a> 
     <a data-type="destroy">Destroy</a>

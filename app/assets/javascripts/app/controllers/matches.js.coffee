@@ -1,5 +1,6 @@
 $ = jQuery.sub()
 Match = App.Match
+Player = App.Player
 
 $.fn.item = ->
   elementID   = $(@).data('id')
@@ -16,7 +17,9 @@ class New extends Spine.Controller
     @active @render
     
   render: ->
-    @html @view('matches/new')(players: App.Player.all())
+    Player.fetch()
+    players = Player.all()
+    @html @view('matches/new')(players: players) 
 
   back: ->
     @navigate '/matches'

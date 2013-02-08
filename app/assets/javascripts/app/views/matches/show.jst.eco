@@ -2,8 +2,8 @@
 
 <a data-type="edit">Edit</a> <a data-type="back">Back</a>
 
-<p>Player 1: <%= @player_1_id %></p>
-<p>Player 2: <%= @player_2_id %></p>
+<p>Player 1: <%= App.Player.find(@player_1_id).first_name %></p>
+<p>Player 2: <%= App.Player.find(@player_2_id).first_name %></p>
 <p>P1 Games Won: <%= @p1_games_won %></p>
 <p>P2 Games Won: <%= @p2_games_won %></p>
 <p>Draws: <%= @draws %></p>

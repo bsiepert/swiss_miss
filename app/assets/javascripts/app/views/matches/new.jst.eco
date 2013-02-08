@@ -1,26 +1,25 @@
 <h1>New Fatch</h1>
 
 <a data-type="back">Back</a>
-
+<h1><%= @players.length %></h1>
 <form>
   
   <label>
     <span>Player 1</span>
     <select name="player_1_id">
     <% for player in @players: %>
-      <p>
       <option value=<%=player.id%>><%=player.first_name%></option>
     <% end %>
     </select>
     <br />
   </label>
-  
   <label>
     <span>Player 2</span>
-    <input 
-      type="text" name="player_2_id" 
-      value="<%= @player_2_id %>" required
->
+    <select name="player_2_id">
+    <% for player in @players: %>
+      <option value=<%=player.id%>><%=player.first_name%></option>
+    <% end %>
+    </select>
     <br />
   </label>
   
