@@ -1,7 +1,6 @@
 <h1>New Fatch</h1>
 
 <a data-type="back">Back</a>
-<h1><%= @players.length %></h1>
 <form>
   
   <label>
@@ -23,32 +22,6 @@
     <br />
   </label>
   
-  <label>
-    <span>P1 Games Won</span>
-    <input 
-      type="text" name="p1_games_won" 
-      value="<%= @p1_games_won %>" required
->
-    <br />
-  </label>
-  
-  <label>
-    <span>P2 Games Won</span>
-    <input 
-      type="text" name="p2_games_won" 
-      value="<%= @p2_games_won %>" required
->
-    <br />
-  </label>
-  
-  <label>
-    <span>Draws</span>
-    <input 
-      type="text" name="draws" 
-      value="<%= @draws %>" required
->
-    <br />
-  </label>
   
   <button>Create</button>
 

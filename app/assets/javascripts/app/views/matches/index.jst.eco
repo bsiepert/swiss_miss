@@ -1,12 +1,20 @@
-<h1>Listing Matches</h1>
-
-<% for match in @matches: %>
+<h1>Matches</h1>
+<% if (@unreported.length > 0): %>
+  <h2>Unreported</h2>
+  <% for match in @unreported: %>
+    <div class="item" data-id="<%= match.id %>">
+      <a data-type="report"><%= match.to_s()%></a>
+      <a data-type="edit">Edit</a> 
+      <a data-type="destroy">Destroy</a>
+    </div>
+  <% end %>
+<% end %>
+<h2>Reported</h2>
+<% for match in @reported: %>
   <div class="item" data-id="<%= match.id %>">
     <a data-type="show"><%= match.to_s()%></a>
-    
     <a data-type="edit">Edit</a> 
     <a data-type="destroy">Destroy</a>
   </div>
 <% end %>
-
 <p><a data-type="new">New Match</a></p>

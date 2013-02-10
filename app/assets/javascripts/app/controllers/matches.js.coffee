@@ -29,6 +29,32 @@ class New extends Spine.Controller
     match = Match.fromForm(e.target).save()
     @navigate '/matches', match.id if match
 
+
+class Report extends Spine.Controller
+  events:
+    'click [data-type=back]': 'back'
+    'submit form': 'submit'
+  
+  constructor: ->
+    super
+    @active (params) ->
+      @change(params.id)
+      
+  change: (id) ->
+    @item = Match.find(id)
+    @render()
+    
+  render: ->
+    @html @view('matches/report')(@item)
+
+  back: ->
+    @navigate '/matches'
+
+  submit: (e) ->
+    e.preventDefault()
+    @item.fromForm(e.target).save()
+    @navigate '/matches'
+
 class Edit extends Spine.Controller
   events:
     'click [data-type=back]': 'back'
@@ -81,6 +107,7 @@ class Index extends Spine.Controller
   events:
     'click [data-type=edit]':    'edit'
     'click [data-type=destroy]': 'destroy'
+    'click [data-type=report]': 'report'
     'click [data-type=show]':    'show'
     'click [data-type=new]':     'new'
 
@@ -90,13 +117,18 @@ class Index extends Spine.Controller
     Match.fetch()
     
   render: =>
-    matches = Match.all()
-    @html @view('matches/index')(matches: matches)
+    reported = Match.reported()
+    unreported = Match.unreported()
+    @html @view('matches/index')(reported: reported, unreported: unreported)
     
   edit: (e) ->
     item = $(e.target).item()
     @navigate '/matches', item.id, 'edit'
-    
+      
+  report: (e) ->
+    item = $(e.target).item()
+    @navigate '/matches', item.id, 'report'
+
   destroy: (e) ->
     item = $(e.target).item()
     item.destroy() if confirm('Sure?')
@@ -114,10 +146,12 @@ class App.Matches extends Spine.Stack
     edit:  Edit
     show:  Show
     new:   New
+    report:   Report
     
   routes:
     '/matches/new':      'new'
     '/matches/:id/edit': 'edit'
+    '/matches/:id/report': 'report'
     '/matches/:id':      'show'
     '/matches':          'index'
     

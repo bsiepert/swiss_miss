@@ -1,0 +1,31 @@
+<h1>Report</h1>
+<a data-type="back">Back</a>
+<form>
+  <label>
+    <span>P1 Games Won</span>
+    <input 
+      type="text" name="p1_games_won" 
+      value="<%= @p1_games_won %>" required
+>
+    <br />
+  </label>
+  
+  <label>
+    <span>P2 Games Won</span>
+    <input 
+      type="text" name="p2_games_won" 
+      value="<%= @p2_games_won %>" required
+>
+    <br />
+  </label>
+  
+  <label>
+    <span>Draws</span>
+    <input 
+      type="text" name="draws" 
+      value="<%= @draws %>" 
+>
+    <br />
+  </label>
+  <button>Save</button>
+</form>
