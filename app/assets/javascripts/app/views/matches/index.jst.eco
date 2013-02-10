@@ -9,6 +9,7 @@
     </div>
   <% end %>
 <% end %>
+
 <h2>Reported</h2>
 <% for match in @reported: %>
   <div class="item" data-id="<%= match.id %>">
