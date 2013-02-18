@@ -1,4 +1,10 @@
 SwissMiss::Application.routes.draw do
+  resources :events
+
+
+  resources :rounds
+
+
   resources :matches
 
 
