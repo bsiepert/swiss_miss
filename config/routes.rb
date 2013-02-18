@@ -1,4 +1,7 @@
 SwissMiss::Application.routes.draw do
+  resources :registrations
+
+
   resources :events
 
 
