@@ -4,6 +4,70 @@ class Event < ActiveRecord::Base
   has_many :players, :through => :registrations
   attr_accessible :name, :date
 
+
+  def rank_players
+    points = points_per_player
+    player_win_percentages = win_percentages(points)
+    player_game_win_percentages = game_win_percentages(points)
+
+    player_data = []
+    points.each do |player, res|
+      match_points, game_points, opponents, games_played = res
+      omwp = average_win_percentage(opponents, player_win_percentages)
+      game_percentage = player_game_win_percentages[player]
+      ogwp = average_win_percentage(opponents, player_game_win_percentages)
+
+      player_data << [player, match_points, omwp, game_percentage, ogwp]
+    end
+
+    sorted_players = player_data.sort do |a,b|
+      #b[1] <=> a[1]
+      # swapping a and b to sort descending
+      p1, mp1, omwp1, gp1, ogwp1 = b
+      p2, mp2, omwp2, gp2, ogwp2 = a
+
+      # refactor meeeeee
+      #puts "mp: #{p1.first_name}#{mp1} vs. #{p2.first_name}#{mp2}"
+      if mp1 > mp2
+        1
+      elsif mp1 < mp2
+        -1
+      else
+        #puts "omwp: #{p1.first_name}#{omwp1} vs. #{p2.first_name}#{omwp2}"
+        if omwp1 > omwp2
+          1
+        elsif omwp1 < omwp2
+          -1
+        else
+          #puts "gp: #{p1.first_name}#{gp1} vs. #{p2.first_name}#{gp2}"
+          if gp1 > gp2
+            1
+          elsif gp1 < gp2
+            -1
+          else
+            #puts "ogwp: #{p1.first_name}#{ogwp1} vs. #{p2.first_name}#{ogwp2}"
+            if ogwp1 > ogwp2
+              1
+            elsif ogwp1 < ogwp2
+              -1
+            else
+            #rando cardissian!
+              #puts "rando!"
+              1
+            end
+          end
+        end
+      end
+    end
+    sorted_players.each do |player, match_points, omwp, game_percentage, ogwp|
+      pad_length = 20-player.name.length
+      puts "%s%s\t%.2f\t%.2f\t%.2f\t%.2f" %[player.first_name, " "*pad_length, match_points, omwp, game_percentage,ogwp]
+      #puts "#{player.name}#{" "*pad_length}#{match_points}\t#{omwp}\t#{game_percentage}\t#{ogwp}"
+    end
+  end
+
+  private
+  
   def points_per_player
     player_points = {}
     players.each do |player|
@@ -41,20 +105,6 @@ class Event < ActiveRecord::Base
     points_sum/rounds.length
   end
 
-  def rank_players
-    points = points_per_player
-    player_win_percentages = win_percentages(points)
-    player_game_win_percentages = game_win_percentages(points)
-
-    points.each do |player, res|
-      match_points, game_points, opponents, games_played = res
-      omwp = average_win_percentage(opponents, player_win_percentages)
-      ogwp = average_win_percentage(opponents, player_game_win_percentages)
-      pad_length = 20-player.name.length
-      puts "#{player.name}#{" "*pad_length}#{match_points}\t#{omwp}\t#{game_points}\t#{ogwp}"
-    end
-  end
-
   def game_win_percentages(points)
     player_game_points = {} 
     points.each do |player,results|
@@ -73,12 +123,14 @@ class Event < ActiveRecord::Base
   
   def game_win_percentage(points, games_played)
     win_percentage = points/(games_played * 3.0)
+    win_percentage =(win_percentage * 100).round / 100.0 
     win_percentage = 0.33 if win_percentage < 0.33
     win_percentage
   end
   
   def match_win_percentage(points)
     win_percentage = points/(rounds.length * 3.0)
+    win_percentage =(win_percentage * 100).round / 100.0 
     win_percentage = 0.33 if win_percentage < 0.33
     win_percentage
   end

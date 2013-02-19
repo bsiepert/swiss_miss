@@ -23,7 +23,6 @@ class Match < ActiveRecord::Base
     p2_game_points = game_points(p2_games_won, draws)
 
     games_played = p1_games_won + p2_games_won
-    puts games_played
 
     if (draws && draws > 0)
       [[player_1, 1, p1_game_points, games_played],
