@@ -7,19 +7,27 @@ class Event < ActiveRecord::Base
 
   def rank_players
     points = points_per_player
-    player_win_percentages = win_percentages(points)
+    player_win_percentages = match_win_percentages(points)
     player_game_win_percentages = game_win_percentages(points)
 
+    #TODO: extract method
     player_data = []
-    points.each do |player, res|
-      match_points, game_points, opponents, games_played = res
-      omwp = average_win_percentage(opponents, player_win_percentages)
+    points.each do |player, results|
+      matches_played = player.reported_matches.length
+      puts "matches played: #{matches_played}"
+
+      match_points, game_points, opponents, games_played = results
+
+      omwp = average_win_percentage(opponents, player_win_percentages, matches_played)
+      
       game_percentage = player_game_win_percentages[player]
-      ogwp = average_win_percentage(opponents, player_game_win_percentages)
+      
+      ogwp = average_win_percentage(opponents, player_game_win_percentages, matches_played)
 
       player_data << [player, match_points, omwp, game_percentage, ogwp]
     end
 
+    #TODO: extract method
     sorted_players = player_data.sort do |a,b|
       #b[1] <=> a[1]
       # swapping a and b to sort descending
@@ -59,15 +67,60 @@ class Event < ActiveRecord::Base
         end
       end
     end
-    sorted_players.each do |player, match_points, omwp, game_percentage, ogwp|
+    sorted_players
+  end
+  def display_standings
+    ranked_players = rank_players
+
+    ranked_players.each do |player, match_points, omwp, game_percentage, ogwp|
       pad_length = 20-player.name.length
       puts "%s%s\t%.2f\t%.2f\t%.2f\t%.2f" %[player.first_name, " "*pad_length, match_points, omwp, game_percentage,ogwp]
-      #puts "#{player.name}#{" "*pad_length}#{match_points}\t#{omwp}\t#{game_percentage}\t#{ogwp}"
     end
-  end
 
+  end
   private
   
+  def average_win_percentage(players, win_percentages, number_of_matches)
+    points_sum = 0
+    players.each do |player|
+      points_sum += win_percentages[player]
+    end
+    points_sum/number_of_matches
+  end
+
+  #TODO: refactor mee
+  ###
+  def game_win_percentages(points)
+    player_game_points = {} 
+    points.each do |player,results|
+      game_points = results[1]
+      num_games = results[3]
+      player_game_points[player] = win_percentage(game_points, num_games)
+    end
+    player_game_points
+  end
+
+  def match_win_percentages(points)
+    player_match_points = {} 
+
+    points.each do |player,results|
+      match_points = results[0]
+      num_matches = player.reported_matches.length
+      player_match_points[player] = win_percentage(match_points, num_matches)
+    end
+
+    player_match_points
+  end
+  #### 
+  
+  def win_percentage(points, amount_played)
+    puts "amount played: #{amount_played}"
+    win_percentage = points/(amount_played * 3.0)
+    win_percentage =(win_percentage * 100).round / 100.0 
+    win_percentage = 0.33 if win_percentage < 0.33
+    win_percentage
+  end
+
   def points_per_player
     player_points = {}
     players.each do |player|
@@ -75,12 +128,13 @@ class Event < ActiveRecord::Base
     end
 
     rounds.each do |round|
-      round.matches.each do |match|
+      round.matches.reported.each do |match|
         p1_points, p2_points = match.points
         p1, p1_mp, p1_gp, p1_gpl = p1_points
         p2, p2_mp, p2_gp, p2_gpl= p2_points
 
 
+        #TODO: games played and opponents can be derived 
         player_points[p1][0] += p1_mp unless p1_mp.nil?
         player_points[p1][1] += p1_gp unless p1_gp.nil?
         player_points[p1][2] << p2
@@ -97,42 +151,4 @@ class Event < ActiveRecord::Base
     player_points
   end
   
-  def average_win_percentage(players, win_percentages)
-    points_sum = 0
-    players.each do |player|
-      points_sum += win_percentages[player]
-    end
-    points_sum/rounds.length
-  end
-
-  def game_win_percentages(points)
-    player_game_points = {} 
-    points.each do |player,results|
-      player_game_points[player] = game_win_percentage(results[1], results[3])
-    end
-    player_game_points
-  end
-
-  def win_percentages(points)
-    player_match_points = {} 
-    points.each do |player,results|
-      player_match_points[player] = match_win_percentage(results[0])
-    end
-    player_match_points
-  end
-  
-  def game_win_percentage(points, games_played)
-    win_percentage = points/(games_played * 3.0)
-    win_percentage =(win_percentage * 100).round / 100.0 
-    win_percentage = 0.33 if win_percentage < 0.33
-    win_percentage
-  end
-  
-  def match_win_percentage(points)
-    win_percentage = points/(rounds.length * 3.0)
-    win_percentage =(win_percentage * 100).round / 100.0 
-    win_percentage = 0.33 if win_percentage < 0.33
-    win_percentage
-  end
-
 end

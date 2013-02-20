@@ -2,7 +2,8 @@ class Match < ActiveRecord::Base
   belongs_to :player_1, :class_name => :Player, :foreign_key => :player_1_id
   belongs_to :player_2, :class_name => :Player, :foreign_key => :player_2_id
   belongs_to :round
-  attr_accessible :draws, :p1_games_won, :p2_games_won, :player_1_id, :player_2_id
+  attr_accessible :draws, :player_1, :player_2, :p1_games_won, :p2_games_won, :player_1_id, :player_2_id
+
 
   def before_save
     if ((p1_games_won>0 || p2_games_won > 0) && draws.nil?)
@@ -10,6 +11,7 @@ class Match < ActiveRecord::Base
     end
   end
 
+  scope :reported, lambda { where("p1_games_won is not NULL")}
   scope :with_player, lambda { |player| where("player_1_id =  ? or player_2_id = ?", player.id, player.id) }
   
 
@@ -38,7 +40,4 @@ class Match < ActiveRecord::Base
     end
 
   end
-
-  
-
 end
